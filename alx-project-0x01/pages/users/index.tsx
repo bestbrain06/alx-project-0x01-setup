@@ -1,3 +1,5 @@
+import Header from "@/components/layout/Header";
+
 export function Users() {
-  return <div></div>;
+  return <Header />;
 }
