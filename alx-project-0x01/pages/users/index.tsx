@@ -1,5 +1,7 @@
 import Header from "@/components/layout/Header";
 
-export function Users() {
+function Users() {
   return <Header />;
 }
+
+export default Users;
