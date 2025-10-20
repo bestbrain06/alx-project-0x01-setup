@@ -1,21 +1,45 @@
 import Header from "@/components/layout/Header";
-import { UserProps } from "@/interfaces";
 import UserCard from "@/components/common/UserCard";
+import UserModal from "@/components/common/UserModal";
+import { UserProps, UserData } from "@/interfaces";
+import { useState } from "react";
 
 const Users: React.FC<{ posts: UserProps[] }> = ({ posts }) => {
-  return (
-    <>
-      <Header />
-      <div className="flex flex-col min-h-screen p-6 bg-gray-50">
-        <h1 className="text-3xl font-bold mb-6 text-center">User Directory</h1>
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState<UserData | null>(null);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((user) => (
-            <UserCard key={user.id} {...user} />
+  const handleAddUser = (user: UserData) => {
+    setNewUser({ ...user, id: posts.length + 1 });
+  };
+
+  return (
+    <div className="flex flex-col h-screen">
+      <Header />
+      <main className="p-4">
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-semibold">Users</h1>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="bg-blue-700 px-4 py-2 rounded-full text-white"
+          >
+            Add User
+          </button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          {posts.map((user, key) => (
+            <UserCard key={key} {...user} />
           ))}
         </div>
-      </div>
-    </>
+      </main>
+
+      {isModalOpen && (
+        <UserModal
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleAddUser}
+        />
+      )}
+    </div>
   );
 };
 
@@ -24,9 +48,7 @@ export async function getStaticProps() {
   const posts = await response.json();
 
   return {
-    props: {
-      posts,
-    },
+    props: { posts },
   };
 }
 
